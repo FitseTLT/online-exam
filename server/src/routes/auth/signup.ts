@@ -36,7 +36,7 @@ signupRouter.post(
     validateRequest,
     async (req: Request, res: Response) => {
         const { name, email, password } = req.body;
-        throw new BadRequestError("sl;df");
+
         const user = User.build({
             name,
             email,
