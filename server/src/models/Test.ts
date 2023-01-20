@@ -7,18 +7,18 @@ import { UserDoc } from "./User";
 interface TestAttrs {
     user: UserDoc;
     exam: ExamDoc;
-    from: Date;
-    to: Date;
+    from?: Date;
+    to?: Date;
     status: TestStatus;
-    testReport: TestReportDoc;
 }
 
-interface TestDoc extends Document {
+export interface TestDoc extends Document {
     user: UserDoc;
     exam: ExamDoc;
     from: Date;
     to: Date;
     status: TestStatus;
+    testReport: TestReportDoc;
 }
 
 interface TestModel extends Model<TestDoc> {
@@ -39,11 +39,9 @@ const testSchema = new Schema(
         },
         from: {
             type: Date,
-            required: true,
         },
         to: {
             type: Date,
-            required: true,
         },
         status: {
             type: String,

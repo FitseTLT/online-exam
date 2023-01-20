@@ -23,6 +23,11 @@ import { createExam } from "./routes/exam/createExam";
 import { updateExam } from "./routes/exam/updateExam";
 import { getAllExam } from "./routes/exam/getAllExam";
 import { getExam } from "./routes/exam/getExam";
+import { createTest } from "./routes/test/createTest";
+import { getAllUsers } from "./routes/auth/getAllUsers";
+import { updateTest } from "./routes/test/updateTest";
+import { getAllTest } from "./routes/test/getAllTest";
+import { getTest } from "./routes/test/getTest";
 
 const app = express();
 
@@ -37,6 +42,7 @@ app.use(currentUser);
 app.use(signupRouter);
 app.use(signoutRouter);
 app.use(signinRouter);
+app.use(getAllUsers);
 
 app.use(createCategory);
 app.use(getAllCategory);
@@ -52,6 +58,11 @@ app.use(createExam);
 app.use(updateExam);
 app.use(getAllExam);
 app.use(getExam);
+
+app.use(createTest);
+app.use(updateTest);
+app.use(getAllTest);
+app.use(getTest);
 
 app.use(errorHandler);
 

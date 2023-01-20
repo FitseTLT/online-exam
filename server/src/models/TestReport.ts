@@ -1,9 +1,11 @@
 import { Document, model, Model, Schema } from "mongoose";
 import { CategoryDoc } from "./Category";
+import { TestDoc } from "./Test";
 import { UserDoc } from "./User";
 
 interface TestReportAttrs {
     user: UserDoc;
+    test: TestDoc;
     attemptedOn: Date;
     timeTaken: number;
     sections: {
@@ -11,11 +13,12 @@ interface TestReportAttrs {
         totalQuestions: number;
         attemptedQuestions: number;
         correct: number;
-    };
+    }[];
 }
 
 export interface TestReportDoc extends Document {
     user: UserDoc;
+    test: TestDoc;
     attemptedOn: Date;
     timeTaken: number;
     sections: {
@@ -23,7 +26,7 @@ export interface TestReportDoc extends Document {
         totalQuestions: number;
         attemptedQuestions: number;
         correct: number;
-    };
+    }[];
 }
 
 interface TestReportModel extends Model<TestReportDoc> {
@@ -36,6 +39,11 @@ const testReportSchema = new Schema({
         ref: "User",
         required: true,
     },
+    test: {
+        type: Schema.Types.ObjectId,
+        ref: "Test",
+        required: true,
+    },
     attemptedOn: {
         type: Date,
         required: true,
@@ -44,25 +52,27 @@ const testReportSchema = new Schema({
         type: Number,
         required: true,
     },
-    sections: {
-        category: {
-            type: Schema.Types.ObjectId,
-            ref: "Category",
-            required: true,
+    sections: [
+        {
+            category: {
+                type: Schema.Types.ObjectId,
+                ref: "Category",
+                required: true,
+            },
+            totalQuestions: {
+                type: Number,
+                required: true,
+            },
+            attemptedQuestions: {
+                type: Number,
+                required: true,
+            },
+            correct: {
+                type: Number,
+                required: true,
+            },
         },
-        totalQuestions: {
-            type: Number,
-            required: true,
-        },
-        attemptedQuestions: {
-            type: Number,
-            required: true,
-        },
-        correct: {
-            type: Number,
-            required: true,
-        },
-    },
+    ],
 });
 
 testReportSchema.statics.build = (attrs: TestReportAttrs) => {
