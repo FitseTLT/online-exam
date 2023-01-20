@@ -12,9 +12,17 @@ import { currentUser } from "./middlewares/currentUser";
 import { signoutRouter } from "./routes/auth/signout";
 import { signinRouter } from "./routes/auth/signin";
 import { createCategory } from "./routes/category/create-category";
-import { listCategory } from "./routes/category/list-category";
+import { getAllCategory } from "./routes/category/get-all-category";
 import { getCategory } from "./routes/category/get-category";
 import { updateCategory } from "./routes/category/update-category";
+import { createQuestion } from "./routes/question/create-question";
+import { updateQuestion } from "./routes/question/update-question";
+import { getAllQuestion } from "./routes/question/get-all-question";
+import { getQuestion } from "./routes/question/get-question";
+import { createExam } from "./routes/exam/createExam";
+import { updateExam } from "./routes/exam/updateExam";
+import { getAllExam } from "./routes/exam/getAllExam";
+import { getExam } from "./routes/exam/getExam";
 
 const app = express();
 
@@ -31,9 +39,19 @@ app.use(signoutRouter);
 app.use(signinRouter);
 
 app.use(createCategory);
-app.use(listCategory);
+app.use(getAllCategory);
 app.use(getCategory);
 app.use(updateCategory);
+
+app.use(createQuestion);
+app.use(updateQuestion);
+app.use(getAllQuestion);
+app.use(getQuestion);
+
+app.use(createExam);
+app.use(updateExam);
+app.use(getAllExam);
+app.use(getExam);
 
 app.use(errorHandler);
 

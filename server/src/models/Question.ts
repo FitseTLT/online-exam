@@ -8,7 +8,7 @@ interface QuestionAttrs {
     difficulty: QuestionDifficulty;
     paragraph?: string;
     question: string;
-    choice?: string[];
+    choices?: string[];
     isDraft: boolean;
     allottedTime?: number;
 }
@@ -19,7 +19,7 @@ export interface QuestionDoc extends Document {
     difficulty: QuestionDifficulty;
     paragraph?: string;
     question: string;
-    choice?: string[];
+    choices?: string[];
     isDraft: boolean;
     allottedTime: number;
 }
@@ -50,11 +50,11 @@ const questionSchema = new Schema(
             type: String,
             required: true,
         },
-        choice: [String],
+        choices: [String],
         isDraft: Boolean,
         allottedTime: {
             type: Number,
-            default: 60,
+            default: 23,
         },
     },
     {

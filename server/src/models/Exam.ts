@@ -2,27 +2,23 @@ import { Document, Model, model, Schema } from "mongoose";
 import { CategoryDoc } from "./Category";
 
 interface ExamAttrs {
-    allotedTime: number;
-    sections: [
-        {
-            category: CategoryDoc;
-            easy: number;
-            medium: number;
-            hard: number;
-        }
-    ];
+    name: string;
+    sections: {
+        category: CategoryDoc;
+        easy?: number;
+        medium?: number;
+        hard?: number;
+    }[];
 }
 
 export interface ExamDoc extends Document {
-    allotedTime: number;
-    sections: [
-        {
-            category: CategoryDoc;
-            easy: number;
-            medium: number;
-            hard: number;
-        }
-    ];
+    name: string;
+    sections: {
+        category: CategoryDoc;
+        easy: number;
+        medium: number;
+        hard: number;
+    }[];
 }
 
 interface ExamModel extends Model<ExamDoc> {
@@ -31,11 +27,11 @@ interface ExamModel extends Model<ExamDoc> {
 
 const examSchema = new Schema(
     {
-        allotedTime: {
-            type: Number,
+        name: {
+            type: String,
             required: true,
+            unique: true,
         },
-
         sections: [
             {
                 category: {
