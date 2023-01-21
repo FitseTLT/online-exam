@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
-import { Schema } from "mongoose";
+import { Aggregate, Model, Schema } from "mongoose";
 import { BadRequestError } from "../../errors/BadRequestError";
 import { requireUser } from "../../middlewares/requireUser";
 import { validateRequest } from "../../middlewares/validateRequest";
@@ -14,9 +14,9 @@ import { generateRandomly } from "../../utils/generateRandomly";
 
 interface Section {
     category: CategoryDoc;
-    easy?: QuestionDoc[];
-    medium?: QuestionDoc[];
-    hard?: QuestionDoc[];
+    easy?: any[];
+    medium?: any[];
+    hard?: any[];
 }
 
 interface GeneratedTest {
@@ -24,7 +24,7 @@ interface GeneratedTest {
     test: TestDoc;
     attemptedOn: Date;
     sections: Section[];
-    allottedTime: number;
+    totalAllottedTime: number;
 }
 
 export const startTest = Router();
@@ -53,64 +53,61 @@ startTest.post(
 
         try {
             exam = await Exam.findById(test.exam).populate("sections.category");
-            console.log(exam);
+
             if (!exam) throw new Error();
         } catch (e) {
             throw new BadRequestError("the exam doesn't exist");
         }
 
-        const allQuestions = await Question.find({ isDraft: false });
-
-        // calculate the number of question for each difficulty
         const generatedTest: GeneratedTest = {
             user: test.user,
             test: test.id,
             attemptedOn: new Date(),
             sections: [],
-            allottedTime: 0,
+            totalAllottedTime: 0,
         };
 
-        exam.sections.forEach((section) => {
+        let totalAllottedTime = 0;
+
+        for (const section of exam.sections) {
             const generatedSection: Section = { category: section.category };
 
-            const questionsInCategory = allQuestions.filter(
-                (question) =>
-                    question.category.toString() === section.category.id
-            );
+            for (const difficulty of Object.values(QuestionDifficulty)) {
+                if (!section[difficulty]) continue;
 
-            Object.values(QuestionDifficulty).forEach((difficulty) => {
-                const questionsOfDifficulty = questionsInCategory.filter(
-                    (question) => question.difficulty === difficulty
-                );
-                const noQuestions = section[difficulty];
+                generatedSection[difficulty] = await Question.aggregate()
+                    .match({
+                        difficulty,
+                        category: section.category._id,
+                    })
+                    .sample(section[difficulty])
+                    .project({
+                        question: 1,
+                        choices: 1,
+                        paragraph: 1,
+                        id: 1,
+                        difficulty: 1,
+                        allottedTime: 1,
+                    });
 
-                if (noQuestions > questionsOfDifficulty.length)
+                if (
+                    generatedSection?.[difficulty]?.length! <
+                    section[difficulty]
+                )
                     throw new BadRequestError(
                         "Not enough questions in the database"
                     );
 
-                generatedSection[difficulty] = generateRandomly(
-                    questionsOfDifficulty,
-                    noQuestions
+                totalAllottedTime = generatedSection[difficulty]?.reduce(
+                    (prev, { allottedTime }) => prev + Number(allottedTime),
+                    totalAllottedTime
                 );
-            });
+            }
 
             generatedTest.sections.push(generatedSection);
-        });
+        }
 
-        //allotted Time
-
-        let allottedTime = 0;
-
-        generatedTest.sections.forEach((section) => {
-            Object.values(QuestionDifficulty).forEach((difficulty) => {
-                section[difficulty]?.forEach((question) => {
-                    allottedTime += question.allottedTime;
-                });
-            });
-        });
-
-        generatedTest.allottedTime = allottedTime;
+        generatedTest.totalAllottedTime = totalAllottedTime;
 
         test.status = TestStatus.OnProgress;
         await test.save();

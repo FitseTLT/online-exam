@@ -32,9 +32,12 @@ import { startTest } from "./routes/test/startTest";
 
 const app = express();
 
+const COOKIE_AGE = 7 * 24 * 60 * 60 * 1000;
+
 app.use(json());
 app.use(
     cookeSession({
+        maxAge: COOKIE_AGE,
         keys: [process.env.COOKIE_SESSION_KEY!],
     })
 );

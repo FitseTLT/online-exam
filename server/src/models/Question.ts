@@ -60,7 +60,8 @@ const questionSchema = new Schema(
         isDraft: Boolean,
         allottedTime: {
             type: Number,
-            default: 23,
+            required: true,
+            default: 60,
         },
     },
     {
