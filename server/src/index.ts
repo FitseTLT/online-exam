@@ -28,6 +28,7 @@ import { getAllUsers } from "./routes/auth/getAllUsers";
 import { updateTest } from "./routes/test/updateTest";
 import { getAllTest } from "./routes/test/getAllTest";
 import { getTest } from "./routes/test/getTest";
+import { startTest } from "./routes/test/startTest";
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use(createTest);
 app.use(updateTest);
 app.use(getAllTest);
 app.use(getTest);
+app.use(startTest);
 
 app.use(errorHandler);
 

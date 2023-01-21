@@ -3,7 +3,6 @@ import { body } from "express-validator";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { User } from "../../models/User";
 import jwt from "jsonwebtoken";
-import { BadRequestError } from "../../errors/BadRequestError";
 
 const signupRouter = Router();
 

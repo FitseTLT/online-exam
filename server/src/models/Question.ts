@@ -1,4 +1,4 @@
-import { Document, model, Model, Schema } from "mongoose";
+import { Document, model, Model, Schema, Types } from "mongoose";
 import { CategoryDoc } from "./Category";
 import { QuestionDifficulty, QuestionType } from "./enums";
 
@@ -9,16 +9,18 @@ interface QuestionAttrs {
     paragraph?: string;
     question: string;
     choices?: string[];
+    answer: string;
     isDraft: boolean;
     allottedTime?: number;
 }
 
 export interface QuestionDoc extends Document {
-    category: CategoryDoc;
+    category: Types.ObjectId;
     type: QuestionType;
     difficulty: QuestionDifficulty;
     paragraph?: string;
     question: string;
+    answer: string;
     choices?: string[];
     isDraft: boolean;
     allottedTime: number;
@@ -47,6 +49,10 @@ const questionSchema = new Schema(
         },
         paragraph: String,
         question: {
+            type: String,
+            required: true,
+        },
+        answer: {
             type: String,
             required: true,
         },

@@ -5,7 +5,6 @@ export enum UserRole {
 
 export enum QuestionType {
     MCQ = "mcq",
-    Paragraph = "paragraph",
     WriteAnswer = "write-answer",
     TrueFalse = "true-false",
 }

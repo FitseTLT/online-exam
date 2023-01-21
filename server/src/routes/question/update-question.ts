@@ -32,6 +32,7 @@ updateQuestion.put(
             return true;
         }),
         body("question").not().isEmpty().withMessage("question is required"),
+        body("answer").not().isEmpty().withMessage("answer is required"),
         body("choices")
             .if(body("type").equals(QuestionType.MCQ))
             .not()
@@ -49,6 +50,7 @@ updateQuestion.put(
             difficulty,
             paragraph,
             question,
+            answer,
             choices,
             isDraft,
             allottedTime,
@@ -65,6 +67,7 @@ updateQuestion.put(
             difficulty,
             paragraph,
             question,
+            answer,
             choices,
             isDraft,
             allottedTime,
