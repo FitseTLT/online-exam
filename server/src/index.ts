@@ -29,6 +29,9 @@ import { updateTest } from "./routes/test/updateTest";
 import { getAllTest } from "./routes/test/getAllTest";
 import { getTest } from "./routes/test/getTest";
 import { startTest } from "./routes/test/startTest";
+import { submitTest } from "./routes/test/submitTest";
+import { getAllTestReport } from "./routes/test-report/getAllTestReport";
+import { getuserTestReport } from "./routes/test-report/getUserTestReport";
 
 const app = express();
 
@@ -68,6 +71,10 @@ app.use(updateTest);
 app.use(getAllTest);
 app.use(getTest);
 app.use(startTest);
+app.use(submitTest);
+
+app.use(getAllTestReport);
+app.use(getuserTestReport);
 
 app.use(errorHandler);
 
