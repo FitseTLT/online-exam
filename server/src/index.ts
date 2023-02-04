@@ -2,12 +2,13 @@ require("express-async-errors");
 require("dotenv").config();
 require("./setup");
 
-import { json } from "body-parser";
+import { json, urlencoded } from "body-parser";
+import cors from "cors";
 
 import express from "express";
 import { errorHandler } from "./middlewares/errorHandler";
 import { signupRouter } from "./routes/auth/signup";
-import cookeSession from "cookie-session";
+import cookieSession from "cookie-session";
 import { currentUser } from "./middlewares/currentUser";
 import { signoutRouter } from "./routes/auth/signout";
 import { signinRouter } from "./routes/auth/signin";
@@ -32,14 +33,26 @@ import { startTest } from "./routes/test/startTest";
 import { submitTest } from "./routes/test/submitTest";
 import { getAllTestReport } from "./routes/test-report/getAllTestReport";
 import { getuserTestReport } from "./routes/test-report/getUserTestReport";
+import { getCurrentUser } from "./routes/auth/getCurrentUser";
+import { updateProfile } from "./routes/auth/updateProfile";
 
 const app = express();
 
 const COOKIE_AGE = 7 * 24 * 60 * 60 * 1000;
 
-app.use(json());
 app.use(
-    cookeSession({
+    cors({
+        credentials: true,
+        origin: ["http://localhost:3000"],
+    })
+);
+
+app.use("/public", express.static("public"));
+app.use(json());
+app.use(urlencoded({ extended: true }));
+
+app.use(
+    cookieSession({
         maxAge: COOKIE_AGE,
         keys: [process.env.COOKIE_SESSION_KEY!],
     })
@@ -50,6 +63,8 @@ app.use(signupRouter);
 app.use(signoutRouter);
 app.use(signinRouter);
 app.use(getAllUsers);
+app.use(getCurrentUser);
+app.use(updateProfile);
 
 app.use(createCategory);
 app.use(getAllCategory);
@@ -78,4 +93,6 @@ app.use(getuserTestReport);
 
 app.use(errorHandler);
 
-app.listen(3000, () => console.log("Listening on Port 3000."));
+app.listen(process.env.PORT, () =>
+    console.log(`Listening on Port ${process.env.PORT}.`)
+);

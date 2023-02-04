@@ -4,7 +4,7 @@ import { validateRequest } from "../../middlewares/validateRequest";
 import { User } from "../../models/User";
 import { Password } from "../../utils/password";
 import jwt from "jsonwebtoken";
-import { BadRequestError } from "../../errors/BadRequestError";
+import { WrongCredentialError } from "../../errors/WrongCredentialError";
 
 export const signinRouter = Router();
 
@@ -20,9 +20,26 @@ signinRouter.post(
 
         const user = await User.findOne({ email });
 
-        if (!user) throw new BadRequestError("Invalid Credentials");
+        if (!user)
+            throw new WrongCredentialError({
+                field: "email",
+                message: "Wrong email",
+            });
+        const passwordCorrect = await Password.compare(user.password, password);
 
-        const cookie = jwt.sign({ id: user.id }, process.env.JWT_KEY!);
+        if (!passwordCorrect)
+            throw new WrongCredentialError({
+                field: "password",
+                message: "Wrong password",
+            });
+
+        const cookie = jwt.sign(
+            {
+                id: user.id,
+                userRole: user.role,
+            },
+            process.env.JWT_KEY!
+        );
 
         req.session = { jwt: cookie };
 

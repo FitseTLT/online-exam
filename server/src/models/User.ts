@@ -6,7 +6,7 @@ interface UserAttrs {
     name: string;
     email: string;
     password: string;
-    picture?: string;
+    avatar?: string;
     role?: UserRole;
 }
 
@@ -14,7 +14,7 @@ export interface UserDoc extends Document {
     name: string;
     email: string;
     password: string;
-    picture: string;
+    avatar: string;
     role: UserRole;
 }
 
@@ -36,9 +36,9 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
-        picture: {
+        avatar: {
             type: String,
-            get: (src: string) => `${process.env.USER_PICTURE_URL}${src}`,
+            get: (value: string) => `${process.env.FULL_ADDRESS}${value}`,
         },
         role: {
             type: String,

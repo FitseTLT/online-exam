@@ -8,11 +8,7 @@ export const requireUser = async (
     res: Response,
     next: NextFunction
 ) => {
-    const userId = req.currentUser?.id;
-
-    const user = await User.findById(userId);
-
-    if (user?.role === UserRole.User) return next();
+    if (req.currentUser?.userRole === UserRole.User) return next();
 
     throw new NotAuthorizedError();
 };

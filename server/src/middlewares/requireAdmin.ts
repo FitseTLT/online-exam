@@ -9,11 +9,7 @@ export const requireAdmin = async (
     res: Response,
     next: NextFunction
 ) => {
-    const userId = req.currentUser?.id;
-
-    const user = await User.findById(userId);
-
-    if (user?.role === UserRole.Administrator) return next();
+    if (req.currentUser?.userRole === UserRole.Administrator) return next();
 
     throw new NotAuthorizedError();
 };

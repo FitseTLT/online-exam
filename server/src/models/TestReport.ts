@@ -130,7 +130,7 @@ testReportSchema.pre("save", async function (next) {
 
         this.set("rank", rank);
         const percentile = calculatePercentile(rank, count);
-        console.log(this.get("rank"), rank, percentile, count);
+
         this.set("percentile", percentile);
 
         const sections = this.get("sections");
@@ -165,7 +165,7 @@ testReportSchema.pre("save", async function (next) {
         const correct = this.get("correct");
         const exam = this.get("exam");
         const count = (await TestReport.countDocuments({ exam }).exec()) + 1;
-        console.log("count", count);
+
         const testReports = await TestReport.find({
             exam,
         });
@@ -173,7 +173,6 @@ testReportSchema.pre("save", async function (next) {
         const sections = this.get("sections");
 
         for (const testReport of testReports) {
-            console.log(this.id === testReport.id);
             if (testReport.id === this.id) continue;
 
             if (testReport.correct < correct)

@@ -47,6 +47,7 @@ signupRouter.post(
         const userJWT = jwt.sign(
             {
                 id: user.id,
+                userRole: user.role,
             },
             process.env.JWT_KEY!
         );

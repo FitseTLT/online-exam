@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
+import { UserRole } from "../models/enums";
 
 interface UserPayload {
     id: string;
+    userRole: UserRole;
 }
 
 declare global {
@@ -13,11 +15,7 @@ declare global {
     }
 }
 
-export const currentUser = (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const currentUser = (req: Request, _: Response, next: NextFunction) => {
     if (!req.session?.jwt) return next();
     try {
         const payload = verify(
