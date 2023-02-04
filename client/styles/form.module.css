@@ -1,0 +1,7 @@
+.form input {
+    @apply border-2 w-full p-1 my-3 rounded-md text-sm block;
+}
+
+.form label {
+    @apply text-gray-600 my-1 block text-sm block;
+}

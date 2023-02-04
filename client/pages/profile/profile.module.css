@@ -1,0 +1,18 @@
+.form > div {
+    @apply grid grid-cols-2 items-center justify-between my-6;
+}
+.form {
+    @apply my-32;
+}
+
+.form div label {
+    @apply mr-20;
+}
+
+.form input {
+    @apply border-2;
+}
+
+.form input + p {
+    max-width: 200px;
+}
