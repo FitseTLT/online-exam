@@ -1,0 +1,7 @@
+.sidebar {
+    @apply w-[300px] bg-gray-900;
+}
+
+.selected-menu {
+    @apply bg-gray-700;
+}

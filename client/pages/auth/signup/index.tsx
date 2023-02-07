@@ -5,7 +5,8 @@ import { useState } from "react";
 import { FieldValues } from "react-hook-form/dist/types/fields";
 import { useRouter } from "next/router";
 import axios from "@/src/axios";
-import styles from "./../../../styles/form.module.css";
+import styles from "./../../../styles/account.module.css";
+import { Paper } from "@mui/material";
 
 const SignUpPage = () => {
     const [backendErrors, setBackendErrors] = useState<any>(null);
@@ -47,49 +48,52 @@ const SignUpPage = () => {
     };
 
     return (
-        <form
-            onSubmit={handleSubmit(signUp)}
-            className={`${styles.form} container flex flex-col mx-auto sm:w-full md:w-96 border-2 mt-16 px-12 py-11 rounded`}
-        >
-            <Input
-                id="name"
-                label="Name"
-                register={register("name", {
-                    required: true,
-                })}
-                errors={errors}
-                backendError={backendErrors?.name}
-            />
-            <Input
-                id="email"
-                label="Email"
-                type="email"
-                register={register("email", {
-                    required: true,
-                    pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-                })}
-                errors={errors}
-                backendError={backendErrors?.email}
-            />
-            <Input
-                id="password"
-                type="password"
-                label="Password"
-                register={register("password", {
-                    required: true,
-                    pattern: {
-                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}$/,
-                        message:
-                            "Password should be between 8 and 20 characters with at least one uppercase, lowercase letters and digit",
-                    },
-                })}
-                errors={errors}
-                backendError={backendErrors?.password}
-            />
-            <Button className="mt-6" type="submit">
-                Signup
-            </Button>
-        </form>
+        <Paper className="mt-16 mx-2 sm:w-full md:w-[350px]">
+            <form
+                onSubmit={handleSubmit(signUp)}
+                className={`${styles.form} flex flex-col border-2 px-12 py-11 rounded`}
+            >
+                <Input
+                    id="name"
+                    label="Name"
+                    register={register("name", {
+                        required: true,
+                    })}
+                    errors={errors}
+                    backendError={backendErrors?.name}
+                />
+                <Input
+                    id="email"
+                    label="Email"
+                    type="email"
+                    register={register("email", {
+                        required: true,
+                        pattern:
+                            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                    })}
+                    errors={errors}
+                    backendError={backendErrors?.email}
+                />
+                <Input
+                    id="password"
+                    type="password"
+                    label="Password"
+                    register={register("password", {
+                        required: true,
+                        pattern: {
+                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}$/,
+                            message:
+                                "Password should be between 8 and 20 characters with at least one uppercase, lowercase letters and digit",
+                        },
+                    })}
+                    errors={errors}
+                    backendError={backendErrors?.password}
+                />
+                <Button className="mt-6" type="submit">
+                    Signup
+                </Button>
+            </form>
+        </Paper>
     );
 };
 

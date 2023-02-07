@@ -1,7 +1,27 @@
-.form input {
-    @apply border-2 w-full p-1 my-3 rounded-md text-sm block;
+.form h1 {
+    @apply text-xl my-10;
 }
 
-.form label {
-    @apply text-gray-600 my-1 block text-sm block;
+.form form {
+    @apply my-10 inline-grid grid-cols-2 items-center justify-center gap-6 my-6;
+}
+
+.form h1 + hr {
+    @apply mb-10;
+}
+
+.form form div label {
+    @apply mr-20;
+}
+
+.form form input {
+    @apply border-2 p-2;
+}
+
+.form form input + p {
+    max-width: 200px;
+}
+
+.form form button:last-child {
+    @apply mt-12 ml-6;
 }

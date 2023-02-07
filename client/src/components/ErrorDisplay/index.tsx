@@ -4,9 +4,10 @@ import { AxiosError } from "axios";
 
 interface Props {
     error: AxiosError | undefined;
+    onlySingleError?: boolean;
 }
 
-export default function ErrorDisplay({ error }: Props) {
+export default function ErrorDisplay({ error, onlySingleError }: Props) {
     if (!error) return null;
 
     if (!error.response)
@@ -22,10 +23,16 @@ export default function ErrorDisplay({ error }: Props) {
             </div>
         );
 
+    if (
+        onlySingleError &&
+        (error?.response?.data as Array<any>).some((e: any) => Boolean(e.field))
+    )
+        return null;
+
     return (
         <div>
             <ul className="list-disc  col-start-1 col-end-3 mx-auto">
-                {(error.response.data as Array<{ message: string }>).map(
+                {(error?.response?.data as Array<{ message: string }>).map(
                     (error, i) => (
                         <li
                             className={`${errorStyles["error-message"]}`}

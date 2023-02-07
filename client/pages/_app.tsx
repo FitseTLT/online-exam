@@ -1,5 +1,6 @@
 import axios from "@/src/axios";
 import { Header } from "@/src/components/Header";
+import Sidebar from "@/src/components/Sidebar";
 import "@/styles/globals.css";
 import { NextPageContext, NextPage } from "next";
 import type { AppProps } from "next/app";
@@ -35,10 +36,15 @@ const App = function ({
         )
             router.replace("/");
     }, []);
+
     return (
-        <div>
-            <Header isLoggedIn={isLoggedIn} avatar={avatar} />
-            <div className="container flex justify-center items-center">
+        <div className="flex">
+            {userRole === "admin" ? (
+                <Sidebar />
+            ) : (
+                <Header isLoggedIn={isLoggedIn} avatar={avatar} />
+            )}
+            <div className="flex-1 bg-gray-100">
                 <Component
                     {...pageProps}
                     userRole={userRole}

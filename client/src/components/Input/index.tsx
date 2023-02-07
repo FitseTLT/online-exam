@@ -24,7 +24,7 @@ export default function Input({
     autoComplete,
 }: Props) {
     return (
-        <div>
+        <>
             <label htmlFor={id || register.name}>{label}</label>
             <input
                 id={id || register.name}
@@ -57,6 +57,6 @@ export default function Input({
                     {backendError}
                 </p>
             )}
-        </div>
+        </>
     );
 }
