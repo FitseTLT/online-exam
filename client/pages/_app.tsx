@@ -1,6 +1,7 @@
 import axios from "@/src/axios";
 import { Header } from "@/src/components/Header";
 import Sidebar from "@/src/components/Sidebar";
+import { UserAvatar } from "@/src/components/UserAvatar";
 import "@/styles/globals.css";
 import { NextPageContext, NextPage } from "next";
 import type { AppProps } from "next/app";
@@ -31,20 +32,34 @@ const App = function ({
         else if (
             (isLoggedIn &&
                 userRole === "user" &&
-                pathname.includes("/admin")) ||
-            (userRole === "admin" && pathname.includes("/user"))
+                (pathname.includes("/admin") || pathname.includes("/auth"))) ||
+            (userRole === "admin" &&
+                (pathname.includes("/user") || pathname.includes("/auth")))
         )
             router.replace("/");
     }, []);
 
     return (
-        <div className="flex">
+        <div className="min-h-full w-screen">
             {userRole === "admin" ? (
                 <Sidebar />
             ) : (
-                <Header isLoggedIn={isLoggedIn} avatar={avatar} />
+                userRole === "user" && (
+                    <Header isLoggedIn={isLoggedIn} avatar={avatar} />
+                )
             )}
-            <div className="flex-1 bg-gray-100">
+            <div
+                className={`${
+                    userRole === "admin"
+                        ? "admin-main"
+                        : userRole === "user"
+                        ? "mt-[70px]"
+                        : ""
+                } absolute left-0 overflow-y-auto bottom-0 top-0 right-0 bg-gray-100`}
+            >
+                {userRole === "admin" && (
+                    <UserAvatar className="absolute right-0" avatar={avatar} />
+                )}
                 <Component
                     {...pageProps}
                     userRole={userRole}
@@ -63,16 +78,17 @@ App.getInitialProps = async function ({ ctx }: { ctx: NextPageContext }) {
     const cookie = ctx?.req?.headers.cookie;
     let userRole = null,
         avatar,
-        name;
+        name,
+        email;
 
     try {
         const res = await axios("/api/current-user", {
             headers: {
-                Cookie: cookie,
+                cookie: cookie,
             },
         });
 
-        ({ avatar, name, userRole } = res.data);
+        ({ avatar, name, userRole, email } = res.data);
     } catch (e) {
         console.log(e);
     }
@@ -82,5 +98,6 @@ App.getInitialProps = async function ({ ctx }: { ctx: NextPageContext }) {
         userRole,
         avatar,
         name,
+        email,
     };
 };

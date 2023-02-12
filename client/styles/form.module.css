@@ -3,7 +3,7 @@
 }
 
 .form form {
-    @apply my-10 inline-grid grid-cols-2 items-center justify-center gap-6 my-6;
+    @apply my-10 inline-grid grid-cols-2 gap-10 items-center justify-start my-6;
 }
 
 .form h1 + hr {
@@ -20,8 +20,4 @@
 
 .form form input + p {
     max-width: 200px;
-}
-
-.form form button:last-child {
-    @apply mt-12 ml-6;
 }

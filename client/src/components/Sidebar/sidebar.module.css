@@ -1,5 +1,5 @@
 .sidebar {
-    @apply w-[300px] bg-gray-900;
+    @apply w-[250px] bg-gray-900 fixed z-10 left-0 top-0 bottom-0;
 }
 
 .selected-menu {

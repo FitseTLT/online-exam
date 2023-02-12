@@ -1,5 +1,5 @@
 .form {
-    @apply grid grid-cols-2 items-center justify-between my-6;
+    @apply grid grid-cols-2 gap-8 items-center justify-center m-auto max-w-[600px];
 }
 .form {
     @apply my-32;

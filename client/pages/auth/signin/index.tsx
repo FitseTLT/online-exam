@@ -28,30 +28,36 @@ const SignInPage = () => {
 
             if (res.status === 200) router.replace("/");
         } catch (e: any) {
-            const errorMsgs = e.response.data;
-            setBackendErrors(
-                errorMsgs.reduce(
-                    (
-                        prev: object,
-                        {
-                            field,
-                            message,
-                        }: {
-                            field: string;
-                            message: string;
-                        }
-                    ) => ({ ...prev, [field]: message }),
-                    {}
-                )
-            );
+            const errorMsgs = e?.response?.data;
+
+            if (!errorMsgs) {
+                setBackendErrors({
+                    password: "Error Occurred",
+                });
+            } else
+                setBackendErrors(
+                    errorMsgs.reduce(
+                        (
+                            prev: object,
+                            {
+                                field,
+                                message,
+                            }: {
+                                field: string;
+                                message: string;
+                            }
+                        ) => ({ ...prev, [field]: message }),
+                        {}
+                    )
+                );
         }
     };
 
     return (
-        <Paper className="mt-16 mx-2">
+        <Paper className="mt-16 mx-auto sm:w-full md:w-[400px] px-2">
             <form
                 onSubmit={handleSubmit(signIn)}
-                className={`${styles.form} flex flex-col px-12 py-11 max-w-full`}
+                className={`${styles.form} flex flex-col px-12 py-11`}
             >
                 <div className="mt-8">
                     Don&apos;t have an account?

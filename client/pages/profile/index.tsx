@@ -31,8 +31,10 @@ const Profile = ({ name, avatar, updateProfile }: Props) => {
     const [backendError, setBackendError] = useState<AxiosError | undefined>();
     const [selectedFile, setSelectedFile] = useState<Blob | undefined>();
     const [selectedFilePath, setSelectedFilePath] = useState<string>(avatar);
+
     const onAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] as Blob;
+        if (!file) return;
         setSelectedFile(file);
         const reader = new FileReader();
         const url = reader.readAsDataURL(file);
@@ -116,8 +118,11 @@ const Profile = ({ name, avatar, updateProfile }: Props) => {
                 })}
                 errors={errors}
             />
-            <div>
-                <label>Avatar</label>
+            <label>Avatar</label>
+            <label
+                htmlFor="avatar-selector"
+                className="cursor-pointer justify-self-center"
+            >
                 <input
                     type="file"
                     className="hidden"
@@ -126,14 +131,12 @@ const Profile = ({ name, avatar, updateProfile }: Props) => {
                     id="avatar-selector"
                     onChange={onAvatarSelect}
                 />
-                <label htmlFor="avatar-selector" className="cursor-pointer">
-                    <Avatar className="w-24 h-24" src={selectedFilePath} />
-                </label>
-            </div>
+                <Avatar className="w-24 h-24" src={selectedFilePath} />
+            </label>
             <input
                 type="submit"
                 value="Change Profile"
-                className="cursor-pointer mx-auto mt-16 block bg-blue-500 p-2 text-white rounded-lg"
+                className="cursor-pointer btn mx-auto mt-16 block bg-blue-500 p-2 text-white rounded-lg"
             />
         </form>
     );

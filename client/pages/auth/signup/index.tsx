@@ -28,30 +28,36 @@ const SignUpPage = () => {
 
             if (res.status === 200) router.replace("/");
         } catch (e: any) {
-            const errorMsgs = e.response.data;
-            setBackendErrors(
-                errorMsgs.reduce(
-                    (
-                        prev: object,
-                        {
-                            field,
-                            message,
-                        }: {
-                            field: string;
-                            message: string;
-                        }
-                    ) => ({ ...prev, [field]: message }),
-                    {}
-                )
-            );
+            const errorMsgs = e?.response?.data;
+
+            if (!errorMsgs) {
+                setBackendErrors({
+                    password: "Error Occurred",
+                });
+            } else
+                setBackendErrors(
+                    errorMsgs.reduce(
+                        (
+                            prev: object,
+                            {
+                                field,
+                                message,
+                            }: {
+                                field: string;
+                                message: string;
+                            }
+                        ) => ({ ...prev, [field]: message }),
+                        {}
+                    )
+                );
         }
     };
 
     return (
-        <Paper className="mt-16 mx-2 sm:w-full md:w-[350px]">
+        <Paper className="mt-16 mx-auto sm:w-full md:w-[350px] p-2">
             <form
                 onSubmit={handleSubmit(signUp)}
-                className={`${styles.form} flex flex-col border-2 px-12 py-11 rounded`}
+                className={`${styles.form} flex flex-col px-12 py-11 rounded`}
             >
                 <Input
                     id="name"

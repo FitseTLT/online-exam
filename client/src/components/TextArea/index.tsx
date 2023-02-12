@@ -2,7 +2,6 @@ import errorStyles from "../../../styles/errors.module.css";
 import React from "react";
 import { UseFormRegisterReturn } from "react-hook-form/dist/types";
 import { FieldErrors } from "react-hook-form/dist/types/errors";
-import inputStyles from "./inputs.module.css";
 
 interface Props {
     id?: string;
@@ -14,30 +13,33 @@ interface Props {
     autoComplete?: string;
 }
 
-export default function Input({
+export default function TextArea({
     id,
     type,
     label,
     register,
     errors,
     backendError,
-    autoComplete,
 }: Props) {
     return (
         <>
-            <label htmlFor={id || register.name}>{label}</label>
-            <input
+            <label
+                htmlFor={id || register.name}
+                className="col-start-1 col-end-3"
+            >
+                {label}
+            </label>
+            <textarea
                 id={id || register.name}
-                type={type || "text"}
+                rows={10}
                 {...register}
-                className="p-2 text-sm"
-                autoComplete={autoComplete}
+                className="p-2 text-sm focus:outline-none col-start-1 col-end-3"
             />
 
             {errors[register.name] &&
                 errors[register.name]?.type === "required" && (
                     <p
-                        className={`${errorStyles["error-message"]} col-start-2 col-end-3`}
+                        className={`${errorStyles["error-message"]} col-start-1 col-end-3`}
                     >
                         {register.name} is required
                     </p>
@@ -45,7 +47,7 @@ export default function Input({
             {errors[register.name] &&
                 errors[register.name]?.type !== "required" && (
                     <p
-                        className={`${errorStyles["error-message"]} col-start-2 col-end-3`}
+                        className={`${errorStyles["error-message"]} col-start-1 col-end-3`}
                     >
                         {errors[register.name]?.message?.toString() ||
                             `enter proper ${register.name}`}
@@ -53,7 +55,7 @@ export default function Input({
                 )}
             {backendError && (
                 <p
-                    className={`${errorStyles["error-message"]} col-start-2 col-end-3`}
+                    className={`${errorStyles["error-message"]} col-start-1 col-end-3`}
                 >
                     {backendError}
                 </p>

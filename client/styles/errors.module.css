@@ -1,3 +1,7 @@
 .error-message {
     @apply text-xs text-red-500 mb-1;
 }
+
+.error-message::first-letter {
+    @apply uppercase;
+}

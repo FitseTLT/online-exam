@@ -12,10 +12,10 @@ export default function ErrorDisplay({ error, onlySingleError }: Props) {
 
     if (!error.response)
         return (
-            <div>
+            <div className=" col-start-1 col-end-3">
                 {
                     <p
-                        className={`${errorStyles["error-message"]}  col-start-1 col-end-3 mx-auto`}
+                        className={`${errorStyles["error-message"]} mx-auto text-center`}
                     >
                         {error.message}
                     </p>
@@ -30,8 +30,8 @@ export default function ErrorDisplay({ error, onlySingleError }: Props) {
         return null;
 
     return (
-        <div>
-            <ul className="list-disc  col-start-1 col-end-3 mx-auto">
+        <div className="col-start-1 col-end-3">
+            <ul className="list-none mx-auto text-center">
                 {(error?.response?.data as Array<{ message: string }>).map(
                     (error, i) => (
                         <li

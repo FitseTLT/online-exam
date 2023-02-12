@@ -6,7 +6,7 @@ import inputStyles from "./inputs.module.css";
 
 interface Props {
     id?: string;
-    type?: string;
+    options: string[][];
     label: string;
     register: UseFormRegisterReturn;
     errors: FieldErrors;
@@ -14,9 +14,9 @@ interface Props {
     autoComplete?: string;
 }
 
-export default function Input({
+export default function Select({
     id,
-    type,
+    options,
     label,
     register,
     errors,
@@ -26,13 +26,18 @@ export default function Input({
     return (
         <>
             <label htmlFor={id || register.name}>{label}</label>
-            <input
+            <select
                 id={id || register.name}
-                type={type || "text"}
                 {...register}
-                className="p-2 text-sm"
                 autoComplete={autoComplete}
-            />
+                className="py-2 px-4 text-sm"
+            >
+                {options.map(([label, key], i) => (
+                    <option key={key} value={key} selected={i == 0}>
+                        {label}
+                    </option>
+                ))}
+            </select>
 
             {errors[register.name] &&
                 errors[register.name]?.type === "required" && (
