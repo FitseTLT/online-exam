@@ -11,6 +11,8 @@ module.exports = {
         },
         fontFamily: {
             sans: ["Montserrat"],
+            serif: ["Arial"],
+            mono: ["ui-monospace"],
         },
         extend: {},
     },

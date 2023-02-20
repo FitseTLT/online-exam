@@ -1,0 +1,22 @@
+.top-divs {
+    @apply grid md:grid-cols-2 grid-cols-1 gap-2;
+}
+
+.top-divs span:nth-of-type(2n + 1) {
+    @apply font-bold;
+}
+
+.top-divs span:nth-of-type(2n) {
+    @apply max-w-[200px];
+}
+.bottom-div {
+    @apply grid grid-cols-2 gap-2;
+}
+
+.bottom-div span:nth-of-type(2n + 1) {
+    @apply font-bold;
+}
+
+.bottom-div span:nth-of-type(2n) {
+    @apply max-w-[200px];
+}

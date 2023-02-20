@@ -39,7 +39,13 @@ export default function SingleTest({
     const [backendErrors, setBackendErrors] = useState<any>(null);
     const [backendError, setBackendError] = useState<AxiosError | undefined>();
     const [exams, setExams] = useState<Exam[]>(test.exam ? [test?.exam] : []);
-    const [range, setRange] = useState({});
+    const [range, setRange] = useState<{
+        startDate: Date | undefined;
+        endDate: Date | undefined;
+    }>({
+        startDate: test?.from ? new Date(test?.from) : new Date(),
+        endDate: test?.to ? new Date(test?.to) : new Date(),
+    });
 
     const searchTests = async (e: React.ChangeEvent<HTMLInputElement>) => {
         try {

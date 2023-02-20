@@ -60,6 +60,7 @@ export const Sections = ({ onChange, value, categories }: any) => {
                             <label htmlFor="category">Category</label>
                             <select
                                 name="category"
+                                value={section.category}
                                 onChange={(e) => setSection(e, ind)}
                                 id="category"
                                 className="py-2 px-4 text-sm"

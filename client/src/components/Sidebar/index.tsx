@@ -29,6 +29,10 @@ const menus = [
         name: "Tests",
         path: "/admin/tests",
     },
+    {
+        name: "Test Reports",
+        path: "/admin/test-reports",
+    },
 ];
 
 const Sidebar = () => {

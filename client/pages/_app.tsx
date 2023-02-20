@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 import { NextPageContext, NextPage } from "next";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/dist/client/router";
+import Head from "next/dist/shared/lib/head";
 import { useEffect } from "react";
 
 interface Props extends AppProps {
@@ -41,10 +42,14 @@ const App = function ({
 
     return (
         <div className="min-h-full w-screen">
+            <Head>
+                <title>Online Exam</title>
+            </Head>
             {userRole === "admin" ? (
                 <Sidebar />
             ) : (
-                userRole === "user" && (
+                userRole === "user" &&
+                !router.pathname.includes("/tests/start") && (
                     <Header isLoggedIn={isLoggedIn} avatar={avatar} />
                 )
             )}
@@ -52,15 +57,17 @@ const App = function ({
                 className={`${
                     userRole === "admin"
                         ? "admin-main"
-                        : userRole === "user"
+                        : userRole === "user" &&
+                          !router.pathname.includes("/tests/start")
                         ? "mt-[70px]"
                         : ""
-                } absolute left-0 overflow-y-auto bottom-0 top-0 right-0 bg-gray-100`}
+                } absolute left-0 overflow-y-auto bottom-0 top-0 right-0 bg-gray-100 max-w-full`}
             >
                 {userRole === "admin" && (
                     <UserAvatar className="absolute right-0" avatar={avatar} />
                 )}
                 <Component
+                    suppressHydrationWarning
                     {...pageProps}
                     userRole={userRole}
                     isLoggedIn={isLoggedIn}

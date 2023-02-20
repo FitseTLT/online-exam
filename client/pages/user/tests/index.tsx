@@ -1,9 +1,22 @@
 import axios from "@/src/axios";
 import { Test } from "@/src/components/Test/SingleTest";
-import { Card, CardActionArea, CardContent } from "@mui/material";
+import {
+    Card,
+    CardActionArea,
+    CardContent,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import { GetServerSideProps } from "next";
+import Link from "next/dist/client/link";
+import { useState } from "react";
 
 const Tests = ({ tests }: { tests: Test[] }) => {
+    const [open, setOpen] = useState(false);
+    const [currTestId, setCurrTestId] = useState("");
+
     return (
         <div className="container mx-auto p-12 flex flex-wrap justify-center">
             {tests.map((test) => (
@@ -28,7 +41,35 @@ const Tests = ({ tests }: { tests: Test[] }) => {
                         </ul>
                     </CardContent>
                     <CardActionArea className="flex justify-end p-6">
-                        <button className="btn bg-blue-400 ml-auto">
+                        <Dialog open={open} onClose={() => setOpen(false)}>
+                            <DialogTitle>
+                                Are you sure you want to start the test?
+                            </DialogTitle>
+                            <DialogContent>
+                                Once you start the test you cannot quit.
+                            </DialogContent>
+                            <DialogActions>
+                                <Link
+                                    href={`/user/tests/start/${currTestId}`}
+                                    className="btn m-2 bg-blue-400"
+                                >
+                                    Yeah Start Test
+                                </Link>
+                                <button
+                                    onClick={() => setOpen(false)}
+                                    className="p-2 text-sm rounded bg-gray-200 text-black"
+                                >
+                                    Cancel
+                                </button>
+                            </DialogActions>
+                        </Dialog>
+                        <button
+                            className="btn bg-blue-400 ml-auto"
+                            onClick={() => {
+                                setCurrTestId(test.id as string);
+                                setOpen(true);
+                            }}
+                        >
                             Start Test
                         </button>
                     </CardActionArea>

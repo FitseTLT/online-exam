@@ -8,6 +8,7 @@ export default function Document() {
                     href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
                     rel="stylesheet"
                 />
+                <link href="/favicon.jpg" rel="icon" type="image/jpg" />
             </Head>
             <body>
                 <Main />

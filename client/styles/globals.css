@@ -10,7 +10,7 @@ div#__next {
 }
 
 .btn {
-    @apply rounded py-2 px-4 text-white text-sm active:scale-95;
+    @apply rounded py-2 px-4 text-white text-sm active:scale-95 disabled:active:scale-100 disabled:opacity-50;
 }
 
 a.question-column {
