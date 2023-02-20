@@ -5,8 +5,8 @@ export enum UserRole {
 
 export enum QuestionType {
     MCQ = "mcq",
-    WriteAnswer = "write-answer",
-    TrueFalse = "true-false",
+    "Write-Answer" = "write-answer",
+    "True-False" = "true-false",
 }
 
 export enum QuestionDifficulty {
@@ -16,7 +16,6 @@ export enum QuestionDifficulty {
 }
 
 export enum TestStatus {
-    Draft = "draft",
     Active = "active",
     OnProgress = "on-progress",
     Submitted = "submitted",

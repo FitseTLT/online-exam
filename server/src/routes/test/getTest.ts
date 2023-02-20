@@ -11,7 +11,7 @@ getTest.get(
     async (req: Request, res: Response) => {
         let test;
         try {
-            test = await Test.findById(req.params.id);
+            test = await Test.findById(req.params.id).populate("exam");
         } catch (e) {
             throw new BadRequestError("the test doesn't exist");
         }

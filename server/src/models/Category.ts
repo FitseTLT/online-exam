@@ -3,13 +3,11 @@ import { Document, Model, model, Schema } from "mongoose";
 interface CategoryAttrs {
     name: string;
     code: string;
-    icon?: string;
 }
 
 export interface CategoryDoc extends Document {
     name: string;
     code: string;
-    icon?: string;
 }
 
 interface CategoryModel extends Model<CategoryDoc> {
@@ -28,8 +26,8 @@ const categorySchema = new Schema(
             type: String,
             required: true,
             unique: true,
+            maxLength: 20,
         },
-        icon: String,
     },
     {
         toJSON: {

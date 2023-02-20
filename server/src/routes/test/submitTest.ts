@@ -9,8 +9,6 @@ import { TestStatus } from "../../models/enums";
 import { Question } from "../../models/Question";
 import { Test } from "../../models/Test";
 import { TestReport } from "../../models/TestReport";
-import { calculatePercentile } from "../../utils/calculatePercentile";
-import { withPercentile } from "../../utils/withPercentile";
 
 interface Section {
     category: CategoryDoc;
@@ -26,7 +24,10 @@ submitTest.post(
     requireUser,
     [
         body("test").not().isEmpty().withMessage("test is required"),
-        body("attemptedOn").isDate().withMessage("attempted on should be date"),
+        body("attemptedOn")
+            .not()
+            .isEmpty()
+            .withMessage("attempted on should be date"),
         body("timeTaken").isInt(),
         body("sections").isArray(),
     ],
@@ -37,31 +38,20 @@ submitTest.post(
         let test;
 
         try {
-            test = await Test.findById(testId).populate("user");
+            test = await Test.findById(testId);
 
             if (!test) throw new Error();
 
-            if (test.user.id !== req.currentUser?.id) throw new Error();
+            if (test.userEmail !== req.currentUser?.email)
+                throw new BadRequestError(
+                    "test not assigned to the current user"
+                );
         } catch (e) {
             throw new BadRequestError("test value not proper");
         }
 
         const reportSections: Section[] = [];
         const total = { attemptedQuestions: 0, totalQuestions: 0, correct: 0 };
-
-        const totalResults = await TestReport.aggregate()
-            .match({
-                exam: test.exam,
-            })
-            .group({
-                _id: null,
-                count: {
-                    $count: {},
-                },
-            })
-            .exec();
-
-        const totalCount = (totalResults[0]?.count || 0) + 1;
 
         for (const section of sections) {
             const { category: categoryId, questions } = section;
@@ -111,7 +101,7 @@ submitTest.post(
         }
 
         const testReport = TestReport.build({
-            user: test.user.id,
+            user: new Types.ObjectId(req.currentUser?.id),
             test: test.id,
             exam: test.exam,
             attemptedOn,

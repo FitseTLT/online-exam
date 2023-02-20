@@ -6,23 +6,19 @@ interface QuestionAttrs {
     category: CategoryDoc;
     type: QuestionType;
     difficulty: QuestionDifficulty;
-    paragraph?: string;
     question: string;
     choices?: string[];
     answer: string;
-    isDraft: boolean;
     allottedTime?: number;
 }
 
 export interface QuestionDoc extends Document {
-    category: Types.ObjectId;
+    category: CategoryDoc;
     type: QuestionType;
     difficulty: QuestionDifficulty;
-    paragraph?: string;
     question: string;
     answer: string;
     choices?: string[];
-    isDraft: boolean;
     allottedTime: number;
 }
 
@@ -47,7 +43,6 @@ const questionSchema = new Schema(
             required: true,
             enum: Object.values(QuestionDifficulty),
         },
-        paragraph: String,
         question: {
             type: String,
             required: true,
@@ -57,7 +52,6 @@ const questionSchema = new Schema(
             required: true,
         },
         choices: [String],
-        isDraft: Boolean,
         allottedTime: {
             type: Number,
             required: true,
@@ -67,6 +61,12 @@ const questionSchema = new Schema(
     {
         timestamps: true,
         toJSON: {
+            transform(doc, ret) {
+                ret.id = ret._id;
+                delete ret._id;
+            },
+        },
+        toObject: {
             transform(doc, ret) {
                 ret.id = ret._id;
                 delete ret._id;

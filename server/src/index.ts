@@ -32,9 +32,13 @@ import { getTest } from "./routes/test/getTest";
 import { startTest } from "./routes/test/startTest";
 import { submitTest } from "./routes/test/submitTest";
 import { getAllTestReport } from "./routes/test-report/getAllTestReport";
-import { getuserTestReport } from "./routes/test-report/getUserTestReport";
 import { getCurrentUser } from "./routes/auth/getCurrentUser";
 import { updateProfile } from "./routes/auth/updateProfile";
+import { getAllTypes } from "./routes/types/getAllTypes";
+import { sendTest } from "./routes/test/sendTest";
+import { getUserTests } from "./routes/test/getUserTest";
+import { updateTestState } from "./routes/test/updateTestState";
+import { getTestReport } from "./routes/test-report/getTestReport";
 
 const app = express();
 
@@ -66,6 +70,8 @@ app.use(getAllUsers);
 app.use(getCurrentUser);
 app.use(updateProfile);
 
+app.use(getAllTypes);
+
 app.use(createCategory);
 app.use(getAllCategory);
 app.use(getCategory);
@@ -84,12 +90,15 @@ app.use(getExam);
 app.use(createTest);
 app.use(updateTest);
 app.use(getAllTest);
+app.use(getUserTests);
 app.use(getTest);
 app.use(startTest);
 app.use(submitTest);
+app.use(sendTest);
+app.use(updateTestState);
 
 app.use(getAllTestReport);
-app.use(getuserTestReport);
+app.use(getTestReport);
 
 app.use(errorHandler);
 

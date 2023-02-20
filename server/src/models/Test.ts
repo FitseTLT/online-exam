@@ -2,10 +2,9 @@ import { Document, model, Model, Schema } from "mongoose";
 import { TestStatus } from "./enums";
 import { ExamDoc } from "./Exam";
 import { TestReportDoc } from "./TestReport";
-import { UserDoc } from "./User";
 
 interface TestAttrs {
-    user: UserDoc;
+    userEmail: string;
     exam: ExamDoc;
     from?: Date;
     to?: Date;
@@ -13,12 +12,13 @@ interface TestAttrs {
 }
 
 export interface TestDoc extends Document {
-    user: UserDoc;
+    userEmail: string;
     exam: ExamDoc;
     from: Date;
     to: Date;
     status: TestStatus;
     testReport: TestReportDoc;
+    emailSent: boolean;
 }
 
 interface TestModel extends Model<TestDoc> {
@@ -27,9 +27,8 @@ interface TestModel extends Model<TestDoc> {
 
 const testSchema = new Schema(
     {
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
+        userEmail: {
+            type: String,
             required: true,
         },
         exam: {
@@ -51,6 +50,11 @@ const testSchema = new Schema(
         testReport: {
             type: Schema.Types.ObjectId,
             ref: "TestReport",
+        },
+        emailSent: {
+            type: Boolean,
+            required: true,
+            default: false,
         },
     },
     {

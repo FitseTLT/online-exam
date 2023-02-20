@@ -38,7 +38,6 @@ createQuestion.post(
             .isEmpty()
             .if(body("choices").exists())
             .isArray({ min: 2 }),
-        body("isDraft").isBoolean(),
         body("allottedTime").if(body("allottedTime").exists()).isInt(),
     ],
     validateRequest,
@@ -47,11 +46,9 @@ createQuestion.post(
             category,
             type,
             difficulty,
-            paragraph,
             question,
             answer,
             choices,
-            isDraft,
             allottedTime,
         } = req.body;
 
@@ -59,11 +56,9 @@ createQuestion.post(
             category,
             type,
             difficulty,
-            paragraph,
             question,
             answer,
             choices,
-            isDraft,
             allottedTime,
         });
 

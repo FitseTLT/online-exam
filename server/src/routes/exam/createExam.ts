@@ -18,10 +18,16 @@ createExam.post(
             .custom((name) => {
                 return Exam.findOne({ name }).then((exam) => {
                     if (exam)
-                        Promise.reject("Exam with this name already exists");
+                        return Promise.reject(
+                            "Exam with this name already exists"
+                        );
                 });
             }),
-        body("sections").isArray(),
+        body("sections")
+            .isArray()
+            .not()
+            .isEmpty()
+            .withMessage("sections cannot be empty"),
     ],
     validateRequest,
     async (req: Request, res: Response) => {
@@ -41,12 +47,21 @@ createExam.post(
             if (!rest) throw new BadRequestError("section cannot be empty");
 
             Object.values(rest).forEach((v) => {
-                if (!Number.isInteger(v) || v! <= 0)
+                if (!Number.isInteger(Number(v)) || v! < 0)
                     throw new BadRequestError(
-                        "question number should be a number greater than 0"
+                        "question number cannot be less than than 0"
                     );
             });
 
+            const totalQuestions = Object.values(rest).reduce(
+                (prev: number, v) => Number(v) + prev,
+                0
+            );
+
+            if (totalQuestions < 1)
+                throw new BadRequestError(
+                    "total question of a section cannot be zero"
+                );
             const { easy, medium, hard } = rest;
 
             sections.push({ category, easy, medium, hard });

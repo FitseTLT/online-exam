@@ -2,10 +2,9 @@ import { Router, Response, Request } from "express";
 import { body } from "express-validator";
 import { requireAdmin } from "../../middlewares/requireAdmin";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { TestStatus, UserRole } from "../../models/enums";
+import { TestStatus } from "../../models/enums";
 import { Exam } from "../../models/Exam";
 import { Test } from "../../models/Test";
-import { User } from "../../models/User";
 
 export const createTest = Router();
 
@@ -13,21 +12,7 @@ createTest.post(
     "/api/test",
     requireAdmin,
     [
-        body("user")
-            .not()
-            .isEmpty()
-            .withMessage("user field is required")
-            .bail()
-            .custom((user) =>
-                User.findById(user)
-                    .then((user) => {
-                        if (!user || user.role !== UserRole.User)
-                            throw new Error("user doesn't exist");
-                    })
-                    .catch((e) => {
-                        throw new Error("enter proper user id");
-                    })
-            ),
+        body("userEmail").isEmail().withMessage("please enter proper email"),
         body("exam")
             .not()
             .isEmpty()
@@ -42,21 +27,14 @@ createTest.post(
                         throw new Error("exam doesn't exist");
                     })
             ),
-        body("from")
-            .if(body("from").exists())
-            .isDate()
-            .withMessage("from field should be of date type"),
-        body("to")
-            .if(body("to").exists())
-            .isDate()
-            .withMessage("to field should be of date type"),
-        body("status").isIn(Object.values(TestStatus)),
     ],
     validateRequest,
     async (req: Request, res: Response) => {
-        const { user, exam, from, to, status } = req.body;
+        const { userEmail, exam, from, to } = req.body;
 
-        const test = Test.build({ user, exam, from, to, status });
+        const status = TestStatus.Active;
+
+        const test = Test.build({ userEmail, exam, from, to, status });
         await test.save();
 
         res.send(test);

@@ -5,6 +5,7 @@ import { UserRole } from "../models/enums";
 interface UserPayload {
     id: string;
     userRole: UserRole;
+    email: string;
 }
 
 declare global {

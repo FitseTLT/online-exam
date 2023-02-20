@@ -1,4 +1,3 @@
-import { CategoryDoc } from "../models/Category";
 import { TestReportDoc } from "../models/TestReport";
 import { calculatePercentile } from "./calculatePercentile";
 

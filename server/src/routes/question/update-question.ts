@@ -39,7 +39,6 @@ updateQuestion.put(
             .isEmpty()
             .if(body("choices").exists())
             .isArray({ min: 2 }),
-        body("isDraft").isBoolean(),
         body("allottedTime").if(body("allottedTime").exists()).isInt(),
     ],
     validateRequest,
@@ -48,11 +47,9 @@ updateQuestion.put(
             category,
             type,
             difficulty,
-            paragraph,
             question,
             answer,
             choices,
-            isDraft,
             allottedTime,
         } = req.body;
         const id = req.params.id;
@@ -65,11 +62,9 @@ updateQuestion.put(
             category,
             type,
             difficulty,
-            paragraph,
             question,
             answer,
             choices,
-            isDraft,
             allottedTime,
         });
 

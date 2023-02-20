@@ -11,7 +11,16 @@ export const updateExam = Router();
 updateExam.put(
     "/api/exam/:id",
     requireAdmin,
-    [body("name").isLength({ min: 2, max: 20 }), body("sections").isArray()],
+    [
+        body("name")
+            .isLength({ min: 2, max: 20 })
+            .withMessage("name field should be between 2 and 20 characters."),
+        body("sections")
+            .isArray()
+            .not()
+            .isEmpty()
+            .withMessage("sections cannot be empty"),
+    ],
     validateRequest,
     async (req: Request, res: Response) => {
         const sections = [];
@@ -29,12 +38,24 @@ updateExam.put(
 
             if (!rest) throw new BadRequestError("section cannot be empty");
 
-            Object.values(rest).forEach((v) => {
-                if (!Number.isInteger(v) || v! <= 0)
+            const { _id, ...questionNos } = rest;
+
+            Object.values(questionNos).forEach((v) => {
+                if (!Number.isInteger(Number(v)) || v! < 0)
                     throw new BadRequestError(
-                        "question number should be a number greater than 0"
+                        "question number cannot be less than than 0"
                     );
             });
+
+            const totalQuestions = Object.values(rest).reduce(
+                (prev: number, v) => Number(v) + prev,
+                0
+            );
+
+            if (totalQuestions < 1)
+                throw new BadRequestError(
+                    "total question of a section cannot be zero"
+                );
 
             const { easy, medium, hard } = rest;
 

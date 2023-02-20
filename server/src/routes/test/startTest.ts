@@ -1,27 +1,24 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
-import { Aggregate, Model, Schema } from "mongoose";
 import { BadRequestError } from "../../errors/BadRequestError";
 import { requireUser } from "../../middlewares/requireUser";
 import { validateRequest } from "../../middlewares/validateRequest";
-import { CategoryDoc } from "../../models/Category";
+import { Category, CategoryDoc } from "../../models/Category";
 import { QuestionDifficulty, TestStatus } from "../../models/enums";
 import { Exam } from "../../models/Exam";
-import { Question, QuestionDoc } from "../../models/Question";
+import { Question } from "../../models/Question";
 import { Test, TestDoc } from "../../models/Test";
-import { UserDoc } from "../../models/User";
-import { generateRandomly } from "../../utils/generateRandomly";
+import { TestState } from "../../models/TestState";
 
 interface Section {
     category: CategoryDoc;
-    easy?: any[];
-    medium?: any[];
-    hard?: any[];
+    questions: any[];
 }
 
 interface GeneratedTest {
-    user: UserDoc;
+    user: string;
     test: TestDoc;
+    exam: string;
     attemptedOn: Date;
     sections: Section[];
     totalAllottedTime: number;
@@ -40,16 +37,43 @@ startTest.post(
 
         try {
             test = await Test.findById(testId);
-
-            if (
-                !test ||
-                test.status !== TestStatus.Active ||
-                test.user.toString() !== req.currentUser?.id
-            )
-                throw new Error();
         } catch (e) {
             throw new Error("test id is not proper");
         }
+
+        if (!test /*|| test.status !== TestStatus.Active*/)
+            throw new BadRequestError("invalid test");
+
+        if (test.status === TestStatus.OnProgress) {
+            const testState = await TestState.findOne({ test: testId });
+
+            if (!testState) throw new BadRequestError("invalid mmm test");
+            const { testData } = testState;
+
+            const finishingTime = new Date();
+            finishingTime.setSeconds(
+                testData?.attemptedOn?.getSeconds() +
+                    testData?.totalAllottedTime
+            );
+
+            if (finishingTime < new Date()) {
+                test.status = TestStatus.Cancelled;
+                await test.save();
+                throw new BadRequestError("invalid test");
+            }
+
+            res.send(testState);
+
+            return;
+        }
+
+        const now = new Date();
+
+        if ((test.from && test.from > now) || (test.to && test.to < now))
+            throw new BadRequestError("The test has expired");
+
+        if (req.currentUser?.email !== test.userEmail)
+            throw new BadRequestError("exam not assigned to the current user");
 
         try {
             exam = await Exam.findById(test.exam).populate("sections.category");
@@ -60,7 +84,8 @@ startTest.post(
         }
 
         const generatedTest: GeneratedTest = {
-            user: test.user,
+            user: test.userEmail,
+            exam: exam.name,
             test: test.id,
             attemptedOn: new Date(),
             sections: [],
@@ -70,35 +95,37 @@ startTest.post(
         let totalAllottedTime = 0;
 
         for (const section of exam.sections) {
-            const generatedSection: Section = { category: section.category };
+            const category = (await Category.findById(
+                section.category
+            )) as CategoryDoc;
+
+            const generatedSection: Section = { category, questions: [] };
 
             for (const difficulty of Object.values(QuestionDifficulty)) {
                 if (!section[difficulty]) continue;
 
-                generatedSection[difficulty] = await Question.aggregate()
+                const questions = await Question.aggregate()
                     .match({
                         difficulty,
                         category: section.category._id,
                     })
                     .sample(section[difficulty])
                     .project({
+                        type: 1,
                         question: 1,
                         choices: 1,
-                        paragraph: 1,
-                        id: 1,
                         difficulty: 1,
                         allottedTime: 1,
                     });
 
-                if (
-                    generatedSection?.[difficulty]?.length! <
-                    section[difficulty]
-                )
+                if (questions?.length! < section[difficulty])
                     throw new BadRequestError(
                         "Not enough questions in the database"
                     );
+                generatedSection.questions =
+                    generatedSection.questions.concat(questions);
 
-                totalAllottedTime = generatedSection[difficulty]?.reduce(
+                totalAllottedTime = questions.reduce(
                     (prev, { allottedTime }) => prev + Number(allottedTime),
                     totalAllottedTime
                 );
@@ -112,6 +139,19 @@ startTest.post(
         test.status = TestStatus.OnProgress;
         await test.save();
 
-        res.send(generatedTest);
+        const testState = TestState.build({
+            testData: generatedTest,
+            userAnswer: generatedTest.sections.map((section) => ({
+                category: section.category.id as string,
+                questions: section.questions.map((question) => ({
+                    question: question._id as string,
+                    userAnswer: undefined,
+                })),
+            })),
+        });
+
+        await testState.save();
+
+        res.send(testState);
     }
 );

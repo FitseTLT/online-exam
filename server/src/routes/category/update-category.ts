@@ -13,8 +13,19 @@ updateCategory.put(
         body("name")
             .not()
             .isEmpty()
-            .isLength({ min: 2, max: 20 })
-            .withMessage("Name length should be from 2 - 20 characters"),
+            .custom((name) => {
+                if (name.length < 2 || name.length > 20)
+                    throw new BadRequestError(
+                        "Name length should be from 2 - 20 characters"
+                    );
+
+                return Category.findOne({ name }).then((v) => {
+                    if (v)
+                        return Promise.reject(
+                            "Other category exist with this name"
+                        );
+                });
+            }),
         body("code")
             .not()
             .isEmpty()

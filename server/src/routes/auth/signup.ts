@@ -48,6 +48,7 @@ signupRouter.post(
             {
                 id: user.id,
                 userRole: user.role,
+                email: user.email,
             },
             process.env.JWT_KEY!
         );

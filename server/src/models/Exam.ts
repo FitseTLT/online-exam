@@ -45,9 +45,37 @@ const examSchema = new Schema(
             },
         ],
     },
+
     {
+        virtuals: {
+            totalEasy: {
+                get() {
+                    return this.sections.reduce(
+                        (prev: number, section) => prev + (section.easy ?? 0),
+                        0
+                    );
+                },
+            },
+            totalMedium: {
+                get() {
+                    return this.sections.reduce(
+                        (prev: number, section) => prev + (section.medium ?? 0),
+                        0
+                    );
+                },
+            },
+            totalHard: {
+                get() {
+                    return this.sections.reduce(
+                        (prev: number, section) => prev + (section.hard ?? 0),
+                        0
+                    );
+                },
+            },
+        },
         timestamps: true,
         toJSON: {
+            virtuals: true,
             transform(doc, ret) {
                 ret.id = ret._id;
                 delete ret._id;

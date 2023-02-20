@@ -6,7 +6,7 @@ import { TestDoc } from "./Test";
 import { UserDoc } from "./User";
 
 interface TestReportAttrs {
-    user: UserDoc;
+    user: Types.ObjectId;
     test: TestDoc;
     exam: ExamDoc;
     attemptedOn: Date;
@@ -143,9 +143,13 @@ testReportSchema.pre("save", async function (next) {
             const noBetterResults = await TestReport.aggregate()
                 .match({
                     exam: this.get("exam"),
-                    "sections.category": category,
-                    "sections.correct": {
-                        $gt: correct,
+                    sections: {
+                        $elemMatch: {
+                            category: category,
+                            correct: {
+                                $gt: correct,
+                            },
+                        },
                     },
                 })
                 .count("count")

@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { BadRequestError } from "../../errors/BadRequestError";
-import { RequestValidationError } from "../../errors/RequestValidationError";
 import { requireAdmin } from "../../middlewares/requireAdmin";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { Category } from "../../models/Category";
