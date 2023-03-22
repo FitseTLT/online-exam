@@ -37,7 +37,7 @@ const Profile = ({ name, avatar, updateProfile }: Props) => {
         if (!file) return;
         setSelectedFile(file);
         const reader = new FileReader();
-        const url = reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
 
         reader.onloadend = function () {
             setSelectedFilePath(reader.result as string);

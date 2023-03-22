@@ -82,6 +82,7 @@ export const Sections = ({ onChange, value, categories }: any) => {
                                     <input
                                         id={difficulty}
                                         type="number"
+                                        min={0}
                                         name={difficulty}
                                         value={
                                             section[difficulty as keyof Section]

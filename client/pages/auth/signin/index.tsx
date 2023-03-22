@@ -54,7 +54,7 @@ const SignInPage = () => {
     };
 
     return (
-        <Paper className="mt-16 mx-auto sm:w-full md:w-[400px] px-2">
+        <Paper className="mt-16 mx-auto w-full max-w-[400px] px-2">
             <form
                 onSubmit={handleSubmit(signIn)}
                 className={`${styles.form} flex flex-col px-12 py-11`}

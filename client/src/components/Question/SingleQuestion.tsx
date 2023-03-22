@@ -144,7 +144,7 @@ export default function SingleQuestion({
                         required: true,
                         min: 15,
                     })}
-                    label="Allotted Time"
+                    label="Allotted Time (secs)"
                     errors={errors}
                     backendError={backendErrors?.allottedTime}
                 />

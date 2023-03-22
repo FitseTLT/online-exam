@@ -44,6 +44,7 @@ getAllTestReport.get(
                 },
             }),
         })
+            .sort({ attemptedOn: "desc" })
             .skip((page as number) * recordPerPage)
             .limit(recordPerPage)
             .populate("user", ["name", "email"])

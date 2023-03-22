@@ -3,7 +3,7 @@ import { Header } from "@/src/components/Header";
 import Sidebar from "@/src/components/Sidebar";
 import { UserAvatar } from "@/src/components/UserAvatar";
 import "@/styles/globals.css";
-import { NextPageContext, NextPage } from "next";
+import { NextPageContext } from "next";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/dist/client/router";
 import Head from "next/dist/shared/lib/head";

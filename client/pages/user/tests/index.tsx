@@ -1,6 +1,7 @@
 import axios from "@/src/axios";
 import { Test } from "@/src/components/Test/SingleTest";
 import {
+    Box,
     Card,
     CardActionArea,
     CardContent,
@@ -40,7 +41,7 @@ const Tests = ({ tests }: { tests: Test[] }) => {
                             </li>
                         </ul>
                     </CardContent>
-                    <CardActionArea className="flex justify-end p-6">
+                    <Box className="flex justify-end p-6">
                         <Dialog open={open} onClose={() => setOpen(false)}>
                             <DialogTitle>
                                 Are you sure you want to start the test?
@@ -64,7 +65,7 @@ const Tests = ({ tests }: { tests: Test[] }) => {
                             </DialogActions>
                         </Dialog>
                         <button
-                            className="btn bg-blue-400 ml-auto"
+                            className="btn bg-blue-400 ml-auto my-2 inline-block"
                             onClick={() => {
                                 setCurrTestId(test.id as string);
                                 setOpen(true);
@@ -72,7 +73,7 @@ const Tests = ({ tests }: { tests: Test[] }) => {
                         >
                             Start Test
                         </button>
-                    </CardActionArea>
+                    </Box>
                 </Card>
             ))}
         </div>
